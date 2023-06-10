@@ -370,34 +370,55 @@ plt.figure(figsize=(7,7))
 sns.scatterplot(data = gastos_e_populacao/1000000, x="populacao", y="gastos_por_habitante")
 
 #jeito mais dificil de unis o ultimo e o pnultimo mes
-penultimo_mes = ordenados_por_total.columns[-2]
-penultimo_mes
+#penultimo_mes = ordenados_por_total.columns[-2]
+#penultimo_mes
 
-penultimo_mes = ordenados_por_total[penultimo_mes]
-penultimo_mes.head()
+#penultimo_mes = ordenados_por_total[penultimo_mes]
+#penultimo_mes.head()
 
-ultimo_mes = gastos_do_mais_recente
-ultimo_mes.head()
+#ultimo_mes = gastos_do_mais_recente
+#ultimo_mes.head()
 
 # Remover a parte do código do índice em "ultimo_mes"
-ultimo_mes.index = ultimo_mes.index.str.split().str[1]
+#ultimo_mes.index = ultimo_mes.index.str.split().str[1]
 
 # Remover a parte do código do índice em "penultimo_mes"
-penultimo_mes.index = penultimo_mes.index.str.split().str[1]
+#penultimo_mes.index = penultimo_mes.index.str.split().str[1]
 
 # Redefinir os índices
-ultimo_mes = ultimo_mes.reset_index(drop=True)
-penultimo_mes = penultimo_mes.reset_index(drop=True)
+#ultimo_mes = ultimo_mes.reset_index(drop=True)
+#penultimo_mes = penultimo_mes.reset_index(drop=True)
 
 # Unir os DataFrames lado a lado
-unidos = pd.concat([ultimo_mes, penultimo_mes], axis=1)
+#unidos = pd.concat([ultimo_mes, penultimo_mes], axis=1)
 
 # Exibir o resultado
-unidos.head()
+#unidos.head()
 
 #jeito mais facil de unir o ultimo e o penultimo mes
-penultimo_mes = ordenados_por_total.columns[-2:]
-penultimo_mes
+#penultimo_mes = ordenados_por_total.columns[-2:]
+#penultimo_mes
 
-penultimo_mes = ordenados_por_total[penultimo_mes]
-penultimo_mes.head()
+#penultimo_mes = ordenados_por_total[penultimo_mes]
+#penultimo_mes.head()
+
+ordenados_por_total.index = ordenados_por_total.index.str[3:].str.strip()
+ordenados_por_total
+
+def insere_gastos_e_gasto_por_habitante(ordenados_por_total, gastos_e_populacao, mes):
+  gastos = ordenados_por_total[mes]
+  gastos_e_populacao[f"gastos_{mes}"] = gastos * 1000000
+  gastos_e_populacao[f"gastos_por_habitante_{mes}"] = gastos_e_populacao[f"gastos_{mes}"] / gastos_e_populacao["populacao"]
+  return gastos_e_populacao
+
+gastos_e_populacao = insere_gastos_e_gasto_por_habitante(ordenados_por_total, gastos_e_populacao, ordenados_por_total.columns[-1])
+gastos_e_populacao.head()
+
+gastos_e_populacao = insere_gastos_e_gasto_por_habitante(ordenados_por_total, gastos_e_populacao, ordenados_por_total.columns[-2])
+gastos_e_populacao = insere_gastos_e_gasto_por_habitante(ordenados_por_total, gastos_e_populacao, ordenados_por_total.columns[-3])
+gastos_e_populacao.head()
+
+plt.figure(figsize = (7 ,7))
+sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Dez")
+sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Nov")
+sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Out")
