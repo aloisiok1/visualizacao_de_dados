@@ -422,3 +422,33 @@ plt.figure(figsize = (7 ,7))
 sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Dez")
 sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Nov")
 sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Out")
+
+#Legenda, diminuir marcações e arrumar o gráfico
+#explorar esse gráfico e levantar algumas hipóteses
+#comparar os últimos 12 meses com os 12 meses anteriores. 
+  #Somar os 123 ultimos meses em uma única coluna e somar os meses do mês anterior tbem
+
+ordenados_por_total.loc["São Paulo"]
+
+sns.scatterplot(x = ordenados_por_total.columns, y = ordenados_por_total.loc["São Paulo"])
+
+ordenados_por_total.T
+
+mensal = ordenados_por_total.T
+mensal.head()
+
+sns.scatterplot(data = mensal, x = mensal.index, y = "São Paulo")
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(data = mensal, x = mensal.index, y = "São Paulo")
+
+plt.figure(figsize=(10,6))
+sns.lineplot(data = mensal, x = mensal.index, y = "São Paulo")
+
+plt.figure(figsize=(10,6))
+axis = sns.lineplot(data = mensal, x = mensal.index, y = "São Paulo")
+plt.xticks(rotation = 30)
+plt.ylim(0,600)
+axis.xaxis.set_major_locator(ticker.IndexLocator(base=12, offset=11))
+plt.grid(linestyle="--")
+plt.show
