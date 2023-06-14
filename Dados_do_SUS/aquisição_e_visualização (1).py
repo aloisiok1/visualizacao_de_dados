@@ -425,7 +425,7 @@ sns.scatterplot(data = gastos_e_populacao, x = "populacao", y = "gastos_2021/Out
 
 #Legenda, diminuir marcações e arrumar o gráfico
 #explorar esse gráfico e levantar algumas hipóteses
-#comparar os últimos 12 meses com os 12 meses anteriores. 
+#comparar os últimos 12 meses com os 12 meses anteriores.
   #Somar os 123 ultimos meses em uma única coluna e somar os meses do mês anterior tbem
 
 ordenados_por_total.loc["São Paulo"]
@@ -452,3 +452,77 @@ plt.ylim(0,600)
 axis.xaxis.set_major_locator(ticker.IndexLocator(base=12, offset=11))
 plt.grid(linestyle="--")
 plt.show
+
+"""### 2.4 datetime e Melt"""
+
+#valores estão em float64
+mensal.info()
+
+# o cabeçalho está como um object (texto), a biblioteca não entende a ordem temporal
+mensal.index
+
+def f(x):
+  print(f"valor: {x}")
+
+mensal.index.map(f)
+
+#mudar o texto nas datas por numero
+from datetime import date
+
+meses = {
+    "Jan": 1,
+    "Fev": 2,
+    "Mar": 3,
+    "Abr": 4,
+    "Mai": 5,
+    "Jun": 6,
+    "Jul": 7,
+    "Ago": 8,
+    "Set": 9,
+    "Out": 10,
+    "Nov": 11,
+    "Dez": 12
+}
+
+def para_dia(ano_mes: str):
+  ano: int = int(ano_mes[:4])
+  mes_como_string: str = ano_mes[5:]
+  mes: int = meses[mes_como_string]
+  return date(ano, mes, 1)
+
+mensal.index.map(para_dia)
+
+mensal.index = mensal.index.map(para_dia)
+mensal.head()
+
+plt.figure(figsize=(10,6))
+axis = sns.lineplot(data=mensal, x=mensal.index, y="São Paulo")
+plt.ylim(0, 600)
+plt.grid(linestyle="--")
+plt.show()
+
+plt.figure(figsize=(10,6))
+axis = sns.lineplot(data=mensal, x=mensal.index, y="São Paulo")
+axis = sns.lineplot(data=mensal, x=mensal.index, y="Minas Gerais")
+plt.ylim(0, 600)
+plt.grid(linestyle="--")
+plt.show()
+
+mensal_aberto = mensal.reset_index().melt(id_vars=["index"], value_vars=mensal.columns)
+mensal_aberto.columns = ["mes", "uf", "gasto"]
+mensal_aberto.head()
+
+plt.figure(figsize=(10,6))
+axis = sns.lineplot(data=mensal_aberto, x="mes", y="gasto", hue="uf")
+plt.ylim(0, 600)
+plt.grid(linestyle="--")
+plt.show()
+
+plt.figure(figsize=(10, 6))
+palette = sns.color_palette("Set2")
+
+axis = sns.lineplot(data=mensal_aberto, x="mes", y="gasto", hue="uf", palette=palette)
+
+plt.ylim(0, 600)
+plt.grid(linestyle="--")
+plt.show()
